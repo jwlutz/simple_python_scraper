@@ -29,7 +29,9 @@ class AsyncCrawler:
         self.all_tasks = set()
 
     async def __aenter__(self):
-        self.session = aiohttp.ClientSession(headers={"User-Agent": "BootCrawler/1.0"})
+        self.session = aiohttp.ClientSession(headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        })
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
