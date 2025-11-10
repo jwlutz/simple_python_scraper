@@ -227,8 +227,7 @@ class SiteGraphBuilder:
         fig = go.Figure(
             data=[edge_trace, node_trace],
             layout=go.Layout(
-                title='Site Structure Graph',
-                titlefont_size=16,
+                title=dict(text='Site Structure Graph', font=dict(size=16)),
                 showlegend=False,
                 hovermode='closest',
                 margin=dict(b=20, l=5, r=5, t=40),
