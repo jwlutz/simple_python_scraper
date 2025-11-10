@@ -1,0 +1,60 @@
+# Site Analysis Tool Configuration
+
+# Crawling Parameters
+crawling:
+  max_concurrency: 5           # Maximum concurrent HTTP requests
+  max_pages: 100               # Maximum pages to crawl
+  timeout: 10                  # Request timeout in seconds
+  max_retries: 3               # Maximum retry attempts for failed requests
+  retry_delay: 1               # Initial retry delay in seconds (exponential backoff)
+  rate_limit: 2.0              # Requests per second (0 for unlimited)
+  respect_robots_txt: true     # Whether to respect robots.txt
+  user_agent: "SiteAnalyzer/1.0 (+https://github.com/jwlutz/scraper)"
+
+# Output Configuration
+output:
+  directory: "output"          # Base output directory
+  create_subdirs: true         # Create subdirectories per site/timestamp
+  formats:                     # Output formats to generate
+    - json
+    - html
+    - csv
+    - graph_interactive
+    - graph_static
+    - statistics
+
+# Visualization Settings
+visualization:
+  node_size_by_incoming_links: true
+  color_by_depth: true
+  show_external_links: true
+  max_external_links_display: 50
+  graph_layout: "spring"       # Options: spring, circular, hierarchical
+
+# Analysis Settings
+analysis:
+  classify_page_types: true
+  track_response_times: true
+  track_incoming_links: true
+  max_depth: 5                 # Maximum crawl depth (0 for unlimited)
+  extract_images: true
+  extract_h1: true
+  extract_first_paragraph: true
+
+# Presets (override above settings)
+presets:
+  quick_scan:
+    max_pages: 20
+    max_concurrency: 3
+    max_depth: 2
+  
+  deep_analysis:
+    max_pages: 500
+    max_concurrency: 10
+    max_depth: 0
+  
+  polite_crawl:
+    max_concurrency: 2
+    rate_limit: 0.5
+    respect_robots_txt: true
+

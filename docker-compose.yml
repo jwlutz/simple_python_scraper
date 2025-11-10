@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  analyzer:
+    build: .
+    image: site-analyzer:latest
+    container_name: site-analyzer
+    volumes:
+      # Mount output directory to persist results
+      - ./output:/app/output
+      # Optional: mount custom config
+      - ./config.yaml:/app/config.yaml:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+    # Override command to analyze a site
+    # Example: docker-compose run analyzer https://example.com --preset quick_scan
+    command: ["--help"]
+    
+  # Example service for scheduled crawling
+  analyzer-cron:
+    build: .
+    image: site-analyzer:latest
+    container_name: site-analyzer-cron
+    volumes:
+      - ./output:/app/output
+      - ./config.yaml:/app/config.yaml:ro
+      # Mount a cron script if needed
+      - ./examples/scheduler_example.py:/app/scheduler.py:ro
+    command: ["python", "scheduler.py"]
+    restart: unless-stopped
+    profiles:
+      - scheduled
+

@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# Output and data
+output/
+*.csv
+*.json
+*.html
+*.png
+*.graphml
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Documentation
+*.md
+!README.md
+
+# Tests
+test_*.py
+*_test.py
+
+# Misc
+.DS_Store
+uv.lock
+
