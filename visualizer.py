@@ -217,8 +217,7 @@ class SiteGraphBuilder:
                 colorbar=dict(
                     thickness=15,
                     title='Depth',
-                    xanchor='left',
-                    titleside='right'
+                    xanchor='left'
                 ),
                 line_width=2
             )
