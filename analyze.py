@@ -18,6 +18,7 @@ from rich.table import Table
 
 from config_loader import load_config
 from main import crawl_site_async
+from browser_crawler import crawl_with_browser
 from visualizer import create_visualizations
 from report_generator import generate_all_reports
 from csv_report import write_csv_report
@@ -102,6 +103,10 @@ Examples:
     parser.add_argument('--verbose', '-v', action='store_true',
                        help='Verbose output')
     
+    # Browser mode
+    parser.add_argument('--browser', action='store_true',
+                       help='Use browser automation (bypasses bot detection, slower)')
+    
     return parser
 
 
@@ -152,29 +157,42 @@ async def run_analysis(args):
         console.print()
     
     # Run the crawl
-    console.print(Panel.fit("Starting Site Analysis", style="bold blue"))
+    if args.browser:
+        console.print(Panel.fit("Starting Site Analysis (Browser Mode)", style="bold blue"))
+        console.print("[yellow]Using browser automation - this will be slower but can bypass bot detection[/yellow]\n")
+    else:
+        console.print(Panel.fit("Starting Site Analysis", style="bold blue"))
     
     try:
-        with Progress(
-            SpinnerColumn(),
-            TextColumn("[progress.description]{task.description}"),
-            BarColumn(),
-            TaskProgressColumn(),
-            console=console,
-            transient=True
-        ) as progress:
-            task = progress.add_task("[cyan]Crawling site...", total=config.max_pages)
-            
-            page_data = await crawl_site_async(
+        if args.browser:
+            # Use browser mode
+            page_data = await crawl_with_browser(
                 base_url,
-                max_concurrency=config.max_concurrency,
                 max_pages=config.max_pages,
-                max_retries=config.max_retries,
-                retry_delay=config.retry_delay,
-                rate_limit=config.rate_limit
+                max_depth=config.max_depth
             )
-            
-            progress.update(task, completed=len(page_data))
+        else:
+            # Use regular async crawling
+            with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                BarColumn(),
+                TaskProgressColumn(),
+                console=console,
+                transient=True
+            ) as progress:
+                task = progress.add_task("[cyan]Crawling site...", total=config.max_pages)
+                
+                page_data = await crawl_site_async(
+                    base_url,
+                    max_concurrency=config.max_concurrency,
+                    max_pages=config.max_pages,
+                    max_retries=config.max_retries,
+                    retry_delay=config.retry_delay,
+                    rate_limit=config.rate_limit
+                )
+                
+                progress.update(task, completed=len(page_data))
         
         console.print(f"[green]Successfully crawled {len(page_data)} pages[/green]")
         
